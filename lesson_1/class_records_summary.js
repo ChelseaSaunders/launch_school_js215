@@ -102,6 +102,40 @@
 
 // You can use the following code to test your implementation:
 
+/*
+DATA:
+Input: object of objects
+Output: object with grades property which is array of strings, and exams
+property which is array of objects
+
+given algo:
+//     Compute the student's average exam score: (90 + 80 + 95 + 71) / 4 = 84
+//     Compute the student's total exercise score: 20 + 15 + 40 = 75
+//     Apply weights to determine the final percent grade:
+//                                                  84 * .65 + 75 * .35 = 80.85
+//     Round the percent grade to the nearest integer: 81
+//     Lookup the letter grade in the table above: C
+//     Combine the percent grade and letter grade: "81 (C)"
+
+
+ALGO:
+create result object with two properies both assigned empty arrays:
+  studentGrades and exams
+generate array of keys for input object
+iterate through keys array, with each property as needed
+- compute grades
+    use accumulator to add exam score, then divide by that array length
+    use accumulator to add exercises score
+    apply weights --exercises *
+  - get averages
+
+  - convert to number grades
+-
+*/
+
+const WEIGHTED_EXAM_VALUE = .65;
+const WEIGHTED_EXERCISES_VALUE = .35;
+
 let studentScores = {
   student1: {
     id: 123456789,
@@ -141,10 +175,77 @@ let studentScores = {
 };
 
 function generateClassRecordSummary(scores) {
-  // ...
+  let result = { studentGrades: [], };
+  let keysArr = Object.keys(scores);
+  let allExamsArr = [[], [], [], []];
+
+  keysArr.forEach((student) => {
+    let examsArr = scores[student].scores.exams;
+    let exercisesArr = scores[student].scores.exercises;
+
+    let avgExam = computeExamAvg(examsArr);
+    let avgExercise = computeExerciseAvg(exercisesArr);
+    let avgGrade = computeAvgGrade(avgExam, avgExercise);
+
+    result.studentGrades.push(avgGrade);
+    organizeScoresByExam(examsArr, allExamsArr);
+  });
+
+  result.exams = allExamsArr.map((scores) => computeMinAvgMax(scores));
+
+  return result;
 }
 
-generateClassRecordSummary(studentScores);
+function computeExerciseAvg(exerciseScoreArr) {
+  return exerciseScoreArr.reduce((total, currentVal) => total + currentVal);
+}
+
+function computeExamAvg(examScoreArr) {
+  let totalScore = examScoreArr.reduce((sum, currentVal) => sum + currentVal);
+  let numberOfExams = examScoreArr.length;
+  return totalScore / numberOfExams;
+}
+
+function computeAvgGrade(examAvg, exerciseAvg) {
+  let weightedExamAvg = examAvg * WEIGHTED_EXAM_VALUE;
+  let weightedExerciseAvg = exerciseAvg * WEIGHTED_EXERCISES_VALUE;
+  let avgScore = Math.round(weightedExamAvg + weightedExerciseAvg);
+  let letterGrade = determineLetterGrade(avgScore);
+  return `${avgScore} (${letterGrade})`;
+}
+
+function determineLetterGrade(avgScore) {
+  if (avgScore >= 93 && avgScore <= 100) {
+    return 'A';
+  } else if (avgScore >= 85) {
+    return 'B';
+  } else if (avgScore >= 77) {
+    return 'C';
+  } else if (avgScore >= 69) {
+    return 'D';
+  } else if (avgScore >= 60) {
+    return 'E';
+  } else {
+    return 'F';
+  }
+}
+
+function organizeScoresByExam(scoresArr, examArr) {
+  scoresArr.forEach((score, index) => {
+    examArr[index].push(score);
+  });
+}
+
+function computeMinAvgMax(examArr) {
+  examArr.sort((a, b) => a - b);
+
+  let min = examArr[0]
+  let max = examArr[examArr.length - 1];
+  let avg = computeExamAvg(examArr);
+  return {average: avg, minimum: min, maximum: max};
+}
+
+console.log(generateClassRecordSummary(studentScores));
 
 // returns:
 // {
