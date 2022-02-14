@@ -47,7 +47,7 @@ function generateClassRecordSummary(scores) {
   let students = Object.keys(scores);
 
   result.studentGrades = compileGrades(students, scores);
-  result.exams = compileExamStats(students, scores, result.exams);
+  result.exams = compileExamStats(students, scores);
 
   return result;
 }
@@ -59,8 +59,8 @@ function compileGrades(students, scoreList) {
     let exams = scoreList[student].scores.exams;
     let exercises = scoreList[student].scores.exercises;
 
-    let avgExam = computeExamAvg(exams);
-    let avgExercise = computeExerciseAvg(exercises);
+    let avgExam = computeAvgExam(exams);
+    let avgExercise = computeAvgExercise(exercises);
     let avgGrade = computeAvgGrade(avgExam, avgExercise);
 
     resultArr.push(avgGrade);
@@ -69,12 +69,12 @@ function compileGrades(students, scoreList) {
   return resultArr;
 }
 
-function computeExamAvg(examScoreArr) {
+function computeAvgExam(examScoreArr) {
   let totalScore = examScoreArr.reduce((sum, currentVal) => sum + currentVal);
   return totalScore / NUMBER_OF_EXAMS;
 }
 
-function computeExerciseAvg(exerciseScoreArr) {
+function computeAvgExercise(exerciseScoreArr) {
   return exerciseScoreArr.reduce((total, currentVal) => total + currentVal);
 }
 
@@ -128,7 +128,7 @@ function computeMinAvgMax(examArr) {
 
   let min = examArr[0]
   let max = examArr[examArr.length - 1];
-  let avg = computeExamAvg(examArr);
+  let avg = computeAvgExam(examArr);
 
   return {average: avg, minimum: min, maximum: max};
 }
