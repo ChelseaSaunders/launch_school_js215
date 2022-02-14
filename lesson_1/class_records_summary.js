@@ -43,27 +43,30 @@ let studentScores = {
 };
 
 function generateClassRecordSummary(scores) {
-  let result = { studentGrades: [], exams: [], };
+  let result = {};
   let students = Object.keys(scores);
 
-
-  compileGrades(students, scores, result.studentGrades);
+  result.studentGrades = compileGrades(students, scores);
   result.exams = compileExamStats(students, scores, result.exams);
 
   return result;
 }
 
-function compileGrades(students, scoreList, resultArr) {
-  students.forEach((student) => {
-    let examsArr = scoreList[student].scores.exams;
-    let exercisesArr = scoreList[student].scores.exercises;
+function compileGrades(students, scoreList) {
+  let resultArr = []
 
-    let avgExam = computeExamAvg(examsArr);
-    let avgExercise = computeExerciseAvg(exercisesArr);
+  students.forEach((student) => {
+    let exams = scoreList[student].scores.exams;
+    let exercises = scoreList[student].scores.exercises;
+
+    let avgExam = computeExamAvg(exams);
+    let avgExercise = computeExerciseAvg(exercises);
     let avgGrade = computeAvgGrade(avgExam, avgExercise);
 
     resultArr.push(avgGrade);
   });
+
+  return resultArr;
 }
 
 function computeExamAvg(examScoreArr) {
@@ -101,12 +104,13 @@ function determineLetterGrade(avgScore) {
   }
 }
 
-function compileExamStats(studentList, scoreList, resultArr) {
-  for (let i = 0; i < NUMBER_OF_EXAMS; i += 1) { resultArr.push([]) }
+function compileExamStats(studentList, scoreList) {
+  let scoresForEachExam = []
+  for (let i = 0; i < NUMBER_OF_EXAMS; i += 1) { scoresForEachExam.push([]) }
 
-  organizeScoresByExam(studentList, scoreList, resultArr);
+  organizeScoresByExam(studentList, scoreList, scoresForEachExam);
 
-  return resultArr.map((scores) => computeMinAvgMax(scores));
+  return scoresForEachExam.map((scores) => computeMinAvgMax(scores));
 }
 
 function organizeScoresByExam(students, scores, results) {
