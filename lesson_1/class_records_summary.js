@@ -71,7 +71,7 @@ function compileGrades(students, scoreList) {
 
 function computeAvgExam(examScoreArr) {
   let totalScore = examScoreArr.reduce((sum, currentVal) => sum + currentVal);
-  return totalScore / NUMBER_OF_EXAMS;
+  return totalScore / examScoreArr.length;
 }
 
 function computeAvgExercise(exerciseScoreArr) {
@@ -116,10 +116,7 @@ function compileExamStats(studentList, scoreList) {
 function organizeScoresByExam(students, scores, results) {
   students.forEach((student) => {
     let examsArr = scores[student].scores.exams;
-
-    examsArr.forEach((score, index) => {
-      results[index].push(score);
-    });
+    examsArr.forEach((score, index) => results[index].push(score));
   })
 }
 
