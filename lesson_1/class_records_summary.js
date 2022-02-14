@@ -43,13 +43,12 @@ let studentScores = {
 };
 
 function generateClassRecordSummary(scores) {
-  let result = {};
   let students = Object.keys(scores);
 
-  result.studentGrades = compileGrades(students, scores);
-  result.exams = compileExamStats(students, scores);
+  let compiledGrades = compileGrades(students, scores);
+  let compiledExams = compileExamStats(students, scores);
 
-  return result;
+  return { studentGrades: compiledGrades, exams: compiledExams, };
 }
 
 function compileGrades(students, scoreList) {
@@ -70,12 +69,11 @@ function compileGrades(students, scoreList) {
 }
 
 function computeAvgExam(examScoreArr) {
-  let totalScore = examScoreArr.reduce((sum, currentVal) => sum + currentVal);
-  return totalScore / examScoreArr.length;
+  return examScoreArr.reduce((sum, num) => sum + num) / examScoreArr.length;
 }
 
 function computeAvgExercise(exerciseScoreArr) {
-  return exerciseScoreArr.reduce((total, currentVal) => total + currentVal);
+  return exerciseScoreArr.reduce((total, num) => total + num);
 }
 
 function computeAvgGrade(examAvg, exerciseAvg) {
@@ -89,19 +87,12 @@ function computeAvgGrade(examAvg, exerciseAvg) {
 }
 
 function determineLetterGrade(avgScore) {
-  if (avgScore >= 93 && avgScore <= 100) {
-    return 'A';
-  } else if (avgScore >= 85) {
-    return 'B';
-  } else if (avgScore >= 77) {
-    return 'C';
-  } else if (avgScore >= 69) {
-    return 'D';
-  } else if (avgScore >= 60) {
-    return 'E';
-  } else {
-    return 'F';
-  }
+  if (avgScore >= 93) return 'A';
+  if (avgScore >= 85) return 'B';
+  if (avgScore >= 77) 'C';
+  if (avgScore >= 69) return 'D';
+  if (avgScore >= 60) 'E';
+  return 'F';
 }
 
 function compileExamStats(studentList, scoreList) {
