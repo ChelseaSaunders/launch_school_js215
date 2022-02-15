@@ -48,39 +48,45 @@
 // helper function:
 // - check domain: if
 // main: if check domain is false, return false
-// return true
+// // return true
+
+// function isValidEmail(email) {
+//   let parts = email.split('@');
+//   if (!validateParts(email, parts)) return false;
+
+//   let local = parts[0];
+//   if (!validateLocal(local)) return false;
+
+//   let domain = parts[1];
+//   if (!validateDomain(domain)) return false;
+
+//   return true;
+// }
+
+// function validateParts(email, parts) {
+//   return (email.startsWith('@') || email.endsWith('@') || parts.length === 2);
+// }
+
+// function validateLocal(local) {
+//   return !local.match(/[^a-z0-9]/ig)
+// }
+
+// function validateDomain(domain) {
+//   if (domain.startsWith('.')
+//       || domain.endsWith('.')
+//       || !domain.includes('.')
+//       || domain.match(/\.\./g)
+//       || domain.match(/[^a-z.]/ig)) {
+//      return false;
+//   }
+
+//   return true;
+// }
+
+// REGEX SOLUTION:
 
 function isValidEmail(email) {
-  let parts = email.split('@');
-  if (!validateParts(email, parts)) return false;
-
-  let local = parts[0];
-  if (!validateLocal(local)) return false;
-
-  let domain = parts[1];
-  if (!validateDomain(domain)) return false;
-
-  return true;
-}
-
-function validateParts(email, parts) {
-  return (email.startsWith('@') || email.endsWith('@') || parts.length === 2);
-}
-
-function validateLocal(local) {
-  return !local.match(/[^a-z0-9]/ig)
-}
-
-function validateDomain(domain) {
-  if (domain.startsWith('.')
-      || domain.endsWith('.')
-      || !domain.includes('.')
-      || domain.match(/\.\./g)
-      || domain.match(/[^a-z.]/ig)) {
-     return false;
-  }
-
-  return true;
+  return /^[a-z0-9]+@([a-z]+\.)+[a-z]+$/i.test(email);
 }
 
 console.log(isValidEmail('Foo@baz.com.ph'));          // returns true
