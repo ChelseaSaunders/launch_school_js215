@@ -78,18 +78,21 @@ let shorterText = 'Four score and seven years ago our fathers brought forth' +
 function longestSentence(text) {
   let sentences = generateSentenceArray(text);
   let orderedPunctuation = generatePunctuationArray(text);
-  let splitSentences = generateWordArray(sentences);
-  let longestIndex = findIndexOfLongestSentence(splitSentences)
-
-  let longestCount = splitSentences[longestIndex].length;
+  let sentenceWords = generateWordArray(sentences);
+  let longestIndex = findIndexOfLongestSentence(sentenceWords)
+  let longestCount = sentenceWords[longestIndex].length;
   let longestSentence = sentences[longestIndex];
   let longestPunctuation = orderedPunctuation[longestIndex];
-  longestSentence = renderSentence(longestSentence, longestPunctuation);
-  console.log(generateOutput(longestCount, longestSentence));
+
+  // console.log(`sentences = ${sentences}\npunctuation = ${orderedPunctuation}\nsentenceWords = ${sentenceWords}\nlongestIndex = ${longestIndex}\nlongestCount = ${longestCount}\nlongestSentence = ${longestSentence}\nlongestPunctuation = ${longestPunctuation}`);
+console.log(orderedPunctuation);
+  // console.log(generateOutput(longestSentence, longestPunctuation, longestCount));
 }
 
 function generateSentenceArray(text) {
-  return text.split(/[\.|?|!]/g);
+  return text.split(/[\.|?|!]/g)
+              .map((sentence) => sentence.trim())
+              .filter((words) => words !== '');
 }
 
 function generateWordArray(sentenceArr) {
@@ -114,19 +117,18 @@ function findIndexOfLongestSentence(sentenceArr) {
 function generatePunctuationArray(text) {
   return text.split(/[^\.|?|!]/g).filter((char) => {
     return char === '.' || char === '?' || char === '!';
-  });;
+  });
 }
 
-function renderSentence(sentence, punctuation) {
-  return sentence.trim() + punctuation;
+function wordOrWords(count) {
+  return count === 1 ? 'word' : 'words';
+}
+function generateOutput(sentence, punctuation, count) {
+  return `${sentence}${punctuation}\n\n` +
+  `The longest sentence has ${count} ${wordOrWords(count)}.`;
 }
 
-function generateOutput(count, sentence) {
-  return `${sentence}\n\n` +
-  `The longest sentence has ${count} words.`;
-}
-
-longestSentence(longText);
+// longestSentence(longText);
 
 // console output
 // It is rather for us to be here dedicated to the great task remaining before
@@ -141,7 +143,7 @@ longestSentence(longText);
 
 // Assuming the last sentence is removed:
 
-longestSentence(shorterText);
+// longestSentence(shorterText);
 
 // console output
 // Four score and seven years ago our fathers brought forth on this continent a
@@ -149,3 +151,6 @@ longestSentence(shorterText);
 // men are created equal.
 
 // The longest sentence has 30 words.
+
+console.log(longestSentence('Hello! Why?'));
+console.log(longestSentence('            Hello!!!! Why? Goodbye.'));
