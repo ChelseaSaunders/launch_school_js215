@@ -85,8 +85,8 @@ function longestSentence(text) {
   let longestPunctuation = orderedPunctuation[longestIndex];
 
   // console.log(`sentences = ${sentences}\npunctuation = ${orderedPunctuation}\nsentenceWords = ${sentenceWords}\nlongestIndex = ${longestIndex}\nlongestCount = ${longestCount}\nlongestSentence = ${longestSentence}\nlongestPunctuation = ${longestPunctuation}`);
-console.log(orderedPunctuation);
-  // console.log(generateOutput(longestSentence, longestPunctuation, longestCount));
+// console.log(orderedPunctuation);
+  console.log(generateOutput(longestSentence, longestPunctuation, longestCount));
 }
 
 function generateSentenceArray(text) {
@@ -115,9 +115,7 @@ function findIndexOfLongestSentence(sentenceArr) {
 }
 
 function generatePunctuationArray(text) {
-  return text.split(/[^\.|?|!]/g).filter((char) => {
-    return char === '.' || char === '?' || char === '!';
-  });
+  return text.split(/[^\.|?|!]/g).filter((char) => char !== '');
 }
 
 function wordOrWords(count) {
@@ -128,7 +126,7 @@ function generateOutput(sentence, punctuation, count) {
   `The longest sentence has ${count} ${wordOrWords(count)}.`;
 }
 
-// longestSentence(longText);
+longestSentence(longText);
 
 // console output
 // It is rather for us to be here dedicated to the great task remaining before
@@ -143,7 +141,7 @@ function generateOutput(sentence, punctuation, count) {
 
 // Assuming the last sentence is removed:
 
-// longestSentence(shorterText);
+longestSentence(shorterText);
 
 // console output
 // Four score and seven years ago our fathers brought forth on this continent a
