@@ -19,7 +19,8 @@ PROBLEM:
 RULES:
 - sentences are deliminated by '.', '!', and '?'
 - sentences always begin with a letter
-- words are ANY character sequence other than spaces or sentence ending characters
+- words are ANY character sequence other than spaces or sentence ending
+characters
 
 */
 
@@ -53,6 +54,27 @@ let longText = 'Four score and seven years ago our fathers brought forth' +
   ' the people, for the people, shall not perish from the' +
   ' earth.';
 
+let shorterText = 'Four score and seven years ago our fathers brought forth' +
+  ' on this continent a new nation, conceived in liberty, and' +
+  ' dedicated to the proposition that all men are created' +
+  ' equal.' +
+  ' Now we are engaged in a great civil war, testing whether' +
+  ' that nation, or any nation so conceived and so dedicated,' +
+  ' can long endure. We are met on a great battlefield of that' +
+  ' war. We have come to dedicate a portion of that field, as' +
+  ' a final resting place for those who here gave their lives' +
+  ' that that nation might live. It is altogether fitting and' +
+  ' proper that we should do this.' +
+  ' But, in a larger sense, we can not dedicate, we can not' +
+  ' consecrate, we can not hallow this ground. The brave' +
+  ' men, living and dead, who struggled here, have' +
+  ' consecrated it, far above our poor power to add or' +
+  ' detract. The world will little note, nor long remember' +
+  ' what we say here, but it can never forget what they' +
+  ' did here. It is for us the living, rather, to be dedicated' +
+  ' here to the unfinished work which they who fought' +
+  ' here have thus far so nobly advanced.';
+
 function longestSentence(text) {
   let sentences = generateSentenceArray(text);
   let orderedPunctuation = generatePunctuationArray(text);
@@ -62,7 +84,8 @@ function longestSentence(text) {
   let longestCount = splitSentences[longestIndex].length;
   let longestSentence = sentences[longestIndex];
   let longestPunctuation = orderedPunctuation[longestIndex];
-  console.log(generateOutput(longestCount, longestSentence, longestPunctuation));
+  longestSentence = renderSentence(longestSentence, longestPunctuation);
+  console.log(generateOutput(longestCount, longestSentence));
 }
 
 function generateSentenceArray(text) {
@@ -92,11 +115,14 @@ function generatePunctuationArray(text) {
   return text.split(/[^\.|?|!]/g).filter((char) => {
     return char === '.' || char === '?' || char === '!';
   });;
-
 }
 
-function generateOutput(count, sentence, punctuation) {
-  return `${sentence}${punctuation}\n\n` +
+function renderSentence(sentence, punctuation) {
+  return sentence.trim() + punctuation;
+}
+
+function generateOutput(count, sentence) {
+  return `${sentence}\n\n` +
   `The longest sentence has ${count} words.`;
 }
 
@@ -114,28 +140,8 @@ longestSentence(longText);
 
 
 // Assuming the last sentence is removed:
-longText = 'Four score and seven years ago our fathers brought forth' +
-' on this continent a new nation, conceived in liberty, and' +
-' dedicated to the proposition that all men are created' +
-' equal.' +
-' Now we are engaged in a great civil war, testing whether' +
-' that nation, or any nation so conceived and so dedicated,' +
-' can long endure. We are met on a great battlefield of that' +
-' war. We have come to dedicate a portion of that field, as' +
-' a final resting place for those who here gave their lives' +
-' that that nation might live. It is altogether fitting and' +
-' proper that we should do this.' +
-' But, in a larger sense, we can not dedicate, we can not' +
-' consecrate, we can not hallow this ground. The brave' +
-' men, living and dead, who struggled here, have' +
-' consecrated it, far above our poor power to add or' +
-' detract. The world will little note, nor long remember' +
-' what we say here, but it can never forget what they' +
-' did here. It is for us the living, rather, to be dedicated' +
-' here to the unfinished work which they who fought' +
-' here have thus far so nobly advanced.';
 
-longestSentence(longText);
+longestSentence(shorterText);
 
 // console output
 // Four score and seven years ago our fathers brought forth on this continent a
