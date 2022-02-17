@@ -76,56 +76,31 @@ let shorterText = 'Four score and seven years ago our fathers brought forth' +
   ' here have thus far so nobly advanced.';
 
 function longestSentence(text) {
-  let sentences = generateSentenceArray(text);
-  let orderedPunctuation = generatePunctuationArray(text);
-  let sentenceWords = generateWordArray(sentences);
-  let longestIndex = findIndexOfLongestSentence(sentenceWords)
-  let longestCount = sentenceWords[longestIndex].length;
-  let longestSentence = sentences[longestIndex];
-  let longestPunctuation = orderedPunctuation[longestIndex];
-
-  // console.log(`sentences = ${sentences}\npunctuation = ${orderedPunctuation}\nsentenceWords = ${sentenceWords}\nlongestIndex = ${longestIndex}\nlongestCount = ${longestCount}\nlongestSentence = ${longestSentence}\nlongestPunctuation = ${longestPunctuation}`);
-// console.log(orderedPunctuation);
-  console.log(generateOutput(longestSentence, longestPunctuation, longestCount));
+  let sentences = separateSentences(text);
+  let longest = findMostWords(sentences);
+  // let wordCount = longest.length;
+  // console.log(generateOutput(longest, wordCount));
 }
 
-function generateSentenceArray(text) {
-  return text.split(/[\.|?|!]/g)
-              .map((sentence) => sentence.trim())
-              .filter((words) => words !== '');
+function separateSentences(text) {
+  return text.match(/[^\.?!]+[\.?!]+\s*/gi).map((sentence) => sentence.trim());
 }
 
-function generateWordArray(sentenceArr) {
-  return sentenceArr.map((sentence) => sentence.split(' '));
-}
-
-function findIndexOfLongestSentence(sentenceArr) {
-  let longestIndex = 0;
-  let count = 0
-
-  for (let i = 0; i < sentenceArr.length; i += 1) {
-    let sentenceLength = sentenceArr[i].length;
-    if (sentenceLength > count) {
-      longestIndex = i;
-      count = sentenceLength;
-    }
-  }
-
-  return longestIndex;
-}
-
-function generatePunctuationArray(text) {
-  return text.split(/[^\.|?|!]/g).filter((char) => char !== '');
+function findMostWords(sentenceArr) {
+  let words = sentenceArr.map((sentence) => sentence.split(' '));
+  console.log(words);
+  words.sort((a, b) => a.length - b.length);
+  console.log(words);
+  // return words[0].join(' ');
 }
 
 function wordOrWords(count) {
   return count === 1 ? 'word' : 'words';
 }
-function generateOutput(sentence, punctuation, count) {
-  return `${sentence}${punctuation}\n\n` +
+function generateOutput(sentence, count) {
+  return `${sentence}\n\n` +
   `The longest sentence has ${count} ${wordOrWords(count)}.`;
 }
-
 longestSentence(longText);
 
 // console output
