@@ -77,26 +77,28 @@ let shorterText = 'Four score and seven years ago our fathers brought forth' +
 
 function longestSentence(text) {
   let sentences = separateSentences(text);
-  let longest = findMostWords(sentences);
-  // let wordCount = longest.length;
-  // console.log(generateOutput(longest, wordCount));
+  let longestSentence = findMostWords(sentences);
+  let longestWordCount = wordCount(longestSentence);
+  console.log(generateOutput(longestSentence, longestWordCount));
 }
 
 function separateSentences(text) {
   return text.match(/[^\.?!]+[\.?!]+\s*/gi).map((sentence) => sentence.trim());
 }
 
+function wordCount(sentence) {
+  return sentence.split(' ').length;
+}
+
 function findMostWords(sentenceArr) {
-  let words = sentenceArr.map((sentence) => sentence.split(' '));
-  console.log(words);
-  words.sort((a, b) => a.length - b.length);
-  console.log(words);
-  // return words[0].join(' ');
+  sentenceArr.sort((a, b) => wordCount(b) - wordCount(a));
+  return sentenceArr[0];
 }
 
 function wordOrWords(count) {
   return count === 1 ? 'word' : 'words';
 }
+
 function generateOutput(sentence, count) {
   return `${sentence}\n\n` +
   `The longest sentence has ${count} ${wordOrWords(count)}.`;
