@@ -104,3 +104,34 @@ console.log(compareVersions('1.2', '1.1.1')); // 1
 console.log(compareVersions('12.1', '0.1')); // 1
 console.log(compareVersions('0.1', '12.1')); // -1
 console.log(compareVersions('1.r', '0')); // null
+
+// Now let's zoom into the "version comparison" part of the requirements,
+// interpret the examples given, and come up with concrete rules for comparing
+// versions. One way to describe this step is: How would you explain to a
+// non-technical person the rules for comparing two version numbers? We
+// emphasize non-technical language here, because we want to focus on
+// interpreting the requirements, not on coming up with a solution.
+
+// Spend some time on this question and give it a try!
+
+/*
+To determine if two numbers are equal, we must compare the numbers one section
+at a time. By section, I mean the parts separated by ".", starting from left to
+right, so for example in 1.2.3, and 12.3.4, we would be comparing 1 to 12, 2 to
+3, and 3 to 4.
+However the comparison would not go that far in the above case, because as soon
+as the section for one version is greater than the same section for the other
+version, we have our answer--the one with the greatest value at the earliest
+section where values differ is the greater version. So in the above example, 12
+is greater than 1, so 12.3.4 is the greater version.
+We compare the numbers based on the order of their input, if the first number
+provided is greater, we return 1, if the second number is greater, we return 0,
+and if either of the values provided contain characters other than numbers and .
+we return null.
+When comparing sections, if the last section is 0, we do not consider it--we
+remove any last secrions that are 0 until we are left with a number greater
+than 0.
+Additionally if one of the version numbers provided is shorter than the other,
+and they are exactly the same, but the other one has more sections, the one
+with more sections is considered the greater value.
+*/
