@@ -113,8 +113,44 @@ iterate through CurrentValues
 
 function completeNumbers(numString) {
   let currentValues =  generateNumStringArray(numString);
-  let completedNumbers = generateUpdatedArray(currentValues);
-  return completedNumbers;
+  let completeNumsAndSeparators = generateUpdatedArray(currentValues);
+
+  let completedNumbers = utilizeSeparators(completeNumsAndSeparators);
+
+  return completedNumbers.map((num) => String(num)).join(', ');
+}
+
+function utilizeSeparators(numAndSepArr) {
+  let processedNums = [parseInt(numAndSepArr[0], 10)];
+
+  for (let i = 1; i < numAndSepArr.length; i += 1) {
+    let currentNum = parseInt(numAndSepArr[i], 10);
+    let previousNum = numAndSepArr[i - 1];
+    let prevNumSeparator = previousNum[previousNum.length - 1];
+    previousNum = parseInt(previousNum, 10);
+
+    addNumberOrRange(prevNumSeparator, processedNums, currentNum, previousNum);
+  }
+
+  return processedNums;
+}
+
+function addNumberOrRange(separator, numbersArr, num, prevNum) {
+  if (separator === ',') {
+    numbersArr.push(num);
+  } else if (num - prevNum < 5) {
+    let numberToPush = prevNum + 1;
+    while (numberToPush <= num) {
+      numbersArr.push(numberToPush);
+      numberToPush += 1
+    }
+  } else if (num < 500) {
+    numbersArr.push(prevNum + 1);
+    numbersArr.push('... ' + String(num));
+  } else {
+    numbersArr.push(prevNum + 1);
+    numbersArr.push('.. ' + String(num));
+  }
 }
 
 function generateUpdatedArray(startingValues) {
