@@ -52,12 +52,19 @@ output: boolean
 
 ALGO
 create function checksum that takes one string number, num, as input
-use replace to replace all non-digit characters, reassign num to that value
-split num into an array, map over it so that the element at each even index
-  (index % 2 === 0) is converted to a number and dobled, and each odd index
-  is just converted to a number
-use reduce to add all of the numbers
-retur number % 10 === 0
+use replace to replace all non-digit characters with empty string,
+  reassign num to that value
+if num is empty string, return false
+use helper function to convert number:
+  split num into an array, reverse array (since problem works from r-l) map over
+  it so that the element at each eveb index
+    (index % 2 === 0) is converted to a number, and each odd index
+    is just converted to a number and doubled
+    -if result number is less than or equal to 10, subtract 9
+use helper method to generate sum:
+  use reduce to add all of the numbers together
+
+retur number % 10 === 0, and number is not zero (if want zero to fail)
 
 
 */
@@ -96,6 +103,8 @@ function convertNumber(numStr, idx) {
 
 console.log(checksum('11110')); // false
 console.log(checksum('8763')); // true
+console.log(checksum('87630')); // false *odd number of digits changes value
+// since different digits are being doubled.
 console.log(checksum('')); // false
 console.log(checksum('ab')); // false
 console.log(checksum('1')); // false
