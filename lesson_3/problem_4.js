@@ -110,14 +110,42 @@ iterate through CurrentValues
 - return completedNumbers
 */
 
-
 function completeNumbers(numString) {
   let currentValues =  generateNumStringArray(numString);
-  let completeNumsAndSeparators = generateUpdatedArray(currentValues);
-
-  let completedNumbers = utilizeSeparators(completeNumsAndSeparators);
+  let fullNumbersWithSeparators = generateFullNumbersArray(currentValues);
+  let completedNumbers = utilizeSeparators(fullNumbersWithSeparators);
 
   return completedNumbers.map((num) => String(num)).join(', ');
+}
+
+function generateNumStringArray(numString) {
+  let cleanString = numString.match(/(,|:|\-|\.\.|[0-9])/g).join('');
+  let punctuation = [',', ':', '\\-', '\\.\\.'];
+
+  punctuation.forEach((separator) => {
+    let regex = new RegExp(separator, 'g');
+    let replacement = separator.replace('\\', '') + ' ';
+    cleanString = cleanString.replace(regex, replacement);
+  });
+
+  return cleanString.split(' ');
+}
+
+function generateFullNumbersArray(startingValues) {
+  let numbersArr = [startingValues[0]];
+  let separators = startingValues.map((numStr) => numStr.replace(/[^\D]/g, ''));
+
+  for (let i = 1; i < startingValues.length; i += 1) {
+    let currentNum = startingValues[i];
+    let previousNum = parseInt(numbersArr[i - 1]);
+
+    currentNum = convertToNumber(currentNum, previousNum);
+    currentNum = completeCurrentNum(currentNum, previousNum);
+
+    numbersArr.push(String(currentNum) + separators[i]);
+  }
+
+  return numbersArr;
 }
 
 function utilizeSeparators(numAndSepArr) {
@@ -153,23 +181,6 @@ function addNumberOrRange(separator, numbersArr, num, prevNum) {
   }
 }
 
-function generateUpdatedArray(startingValues) {
-  let numbersArr = [startingValues[0]];
-  let separators = startingValues.map((numStr) => numStr.replace(/[^\D]/g, ''));
-
-  for (let i = 1; i < startingValues.length; i += 1) {
-    let currentNum = startingValues[i];
-    let previousNum = parseInt(numbersArr[i - 1]);
-
-    currentNum = convertToNumber(currentNum, previousNum);
-    currentNum = completeCurrentNum(currentNum, previousNum);
-
-    numbersArr.push(String(currentNum) + separators[i]);
-  }
-
-  return numbersArr;
-}
-
 function convertToNumber(num, prevNum) {
   if (num[0] !== '0') {
     return parseInt(num, 10);
@@ -200,23 +211,6 @@ function adjustDigits(num, prevNum) {
   return parseInt(num, 10);
 }
 
-function generateNumStringArray(numString) {
-  let cleanString = numString.match(/(,|:|\-|\.\.|[0-9])/g).join('');
-  let values = [];
-  let currentValue = '';
-
-  for (let i = 0; i < cleanString.length; i += 1) {
-    let currentChar = cleanString[i];
-    currentValue += currentChar;
-
-    if (currentChar.match(/(,|:|\-|\.\.)/) || i === cleanString.length - 1) {
-      values.push(currentValue);
-      currentValue = '';
-    }
-  }
-
-  return values;
-}
 
 function completeCurrentNum(num, prevNum) {
   if (num > prevNum) return num;
