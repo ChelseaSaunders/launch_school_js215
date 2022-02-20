@@ -1,3 +1,5 @@
+"use strict"
+
 // Write a program that cleans up user-entered phone numbers so that they can be
 // sent as SMS messages.  Other than digits, the number may also contain special
 // characters such as space, dash, dpt, and parentheses that should be ignored.

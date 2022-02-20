@@ -1,3 +1,5 @@
+"use strict"
+
 // A collection of spelling blocks has two letters per block, as shown in this
 // list:
 
