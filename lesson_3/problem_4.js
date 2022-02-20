@@ -110,20 +110,42 @@ iterate through CurrentValues
 - return completedNumbers
 */
 
-
 function completeNumbers(numString) {
   let currentValues =  generateNumStringArray(numString);
   let completedNumbers = [parseInt(currentValues[0], 10)];
 
   for (let i = 1; i < currentValues.length; i += 1) {
-    let currentNum = parseInt(currentValues[i], 10);
-    let previousNum = parseInt(completedNumbers[i - 1], 10);
-    // let separator = currentValues[i].match((/(,|:|\.\.)/).join(''));
+    let currentNum = currentValues[i];
+    let previousNum = completedNumbers[i - 1];
+    currentNum = convertToNumber(currentNum, previousNum);
+    // let separator = currentValues[i].match((/(,|:|\-|\.\.)/).join(''));
     currentNum = completeCurrentNum(currentNum, previousNum);
     completedNumbers.push(currentNum);
   }
 
   return completedNumbers;
+}
+
+function convertToNumber(num, prevNum) {
+  if (num[0] !== '0') {
+    return parseInt(num, 10);
+  } else {
+    return fixLeadingZero(num, prevNum);
+  }
+}
+
+function fixLeadingZero(num, prevNum) {
+  prevNum = String(prevNum);
+  let differentLength = prevNum.length - num.length;
+  if (differentLength <= 0) {
+    num = '1' + num;
+    return parseInt(num, 10);
+  }
+
+  let prepend = prevNum.slice(0, (differentLength));
+  num = prepend + num;
+
+  return parseInt(num, 10);
 }
 
 function generateNumStringArray(numString) {
@@ -134,6 +156,7 @@ function generateNumStringArray(numString) {
   for (let i = 0; i < cleanString.length; i += 1) {
     let currentChar = cleanString[i];
     currentValue += currentChar;
+
     if (currentChar.match(/(,|:|\-|\.\.)/) || i === cleanString.length - 1) {
       values.push(currentValue);
       currentValue = '';
@@ -147,6 +170,8 @@ function completeCurrentNum(num, lastNum) {
   if (num > lastNum) return num;
 
   let currentTens = lastNum - (lastNum % 10);
+  console.log(lastNum);
+  console.log(lastNum % 10);
   num += currentTens;
 
   while (num <= lastNum) {
@@ -156,9 +181,9 @@ function completeCurrentNum(num, lastNum) {
   return num;
 }
 
-console.log(completeNumbers("1, 3, 7, 2, 4, 1"));   // 1, 3, 7, 12, 14, 21
-console.log(completeNumbers("1-3, 1-2"));           // 1, 2, 3, 11, 12
+// console.log(completeNumbers("1, 3, 7, 2, 4, 1"));   // 1, 3, 7, 12, 14, 21
+// console.log(completeNumbers("1-3, 1-2"));           // 1, 2, 3, 11, 12
 // console.log(completeNumbers("1:5:2"));              // 1, 2, 3, 4, 5, 6, ... 12
-console.log(completeNumbers("104-2"));              // 104, 105, ... 112
-console.log(completeNumbers("104-02"));             // 104, 105, ... 202
+// console.log(completeNumbers("104-2"));              // 104, 105, ... 112
+// console.log(completeNumbers("104-02"));             // 104, 105, ... 202
 console.log(completeNumbers("545, 64:11"));         // 545, 564, 565, .. 611
