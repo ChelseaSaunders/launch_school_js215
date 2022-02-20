@@ -32,7 +32,7 @@ ignore all non-number characters
 beginning with the smallest digit (number on the right)
 multiply every SECOND number by 2 (so leave 1's, double 10's, leave 100's,
   double 1000, and so on)
-  IF the result of doubling any digit is greater/equal to 10, subtract 9.  Replace
+  IF the result of doubling any digit is greater/equal to 10, subtract 9. Replace
   the digit with either itself doubled, or itself doubled minus 9, to make a new
   number value
 
@@ -76,24 +76,25 @@ function cleanNumber(numStr) {
 
 function generateSum(number){
   return number.split('')
+               .reverse()
                .map((digit, index) => convertNumber(digit, index))
                .reduce((sum, currentNum) => sum += currentNum);
 }
 
 function convertNumber(numStr, idx) {
   if (idx % 2 === 0) {
+    return parseInt(numStr, 10);
+  } else {
     let newNum = parseInt(numStr, 10) * 2;
     if (newNum >= 10) newNum -= 9;
 
     return newNum;
-  } else {
-  return parseInt(numStr, 10);
   }
 }
 
 
 
-console.log(checksum('1111')); // false
+console.log(checksum('11110')); // false
 console.log(checksum('8763')); // true
 console.log(checksum('')); // false
 console.log(checksum('ab')); // false
