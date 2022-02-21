@@ -138,7 +138,6 @@ function encryptCharachters(messageString) {
   let firstRow = [];
   let secondRow = [];
   let thirdRow = []
-
   let currentRow = firstRow;
   let previousRow;
 
@@ -146,34 +145,28 @@ function encryptCharachters(messageString) {
     currentRow.push(messageString.charAt(i));
 
     if (currentRow === firstRow || currentRow === thirdRow) {
-      previousRow = currentRow;
-      currentRow = secondRow;
+      [previousRow, currentRow] = [currentRow, secondRow]
+
     } else if (previousRow === firstRow) {
-      previousRow = currentRow;
-      currentRow = thirdRow;
+      [previousRow, currentRow] = [currentRow, thirdRow];
     } else {
-      previousRow = currentRow;
-      currentRow = firstRow;
+      [previousRow, currentRow] = [currentRow, firstRow];
     }
   }
+
   return [firstRow, secondRow, thirdRow];
 }
 
 function encryptWord(encodedArray) {
   return encodedArray.map((row) => row.join('')).join('')
 }
+
 function decypher(encodedArray) {
-  if (findEmptyRows(encodedArray)) {
-    return formatPartialCode(encodedArray);
-  }
+  if (findEmptyRows(encodedArray)) return formatPartialCode(encodedArray);
 
-  let firstRow = encodedArray[0];
-  let secondRow = encodedArray[1];
-  let thirdRow = encodedArray[2];
-
-  encodedArray[0] = firstRow.join(' . . . ');
-  encodedArray[1] = '. ' + secondRow.join(' . ');
-  encodedArray[2] = '. . ' + thirdRow.join(' . . . ');
+  encodedArray[0] = encodedArray[0].join(' . . . ');
+  encodedArray[1] = '. ' + encodedArray[1].join(' . ');
+  encodedArray[2] = '. . ' + encodedArray[2].join(' . . . ');
 
   encodedArray = formatEvenRows(encodedArray);
 
