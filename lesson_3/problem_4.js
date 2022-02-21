@@ -167,7 +167,6 @@ function generateFullNumber(num, prevNum) {
 function adjustDigits(num, prevNum) {
   num = String(num);
   prevNum = String(prevNum);
-
   let differentLength = prevNum.length - num.length;
 
   if (sameNumOfDigits(differentLength) || paddedWithZeros(differentLength)) {
@@ -186,6 +185,18 @@ function paddedWithZeros(difference) {
   return difference < 0;
 }
 
+function findNextNumber(currentNumber, previousNumber, difference) {
+  let prepend = previousNumber.slice(0, (difference));
+  let newNum = prepend + currentNumber;
+
+  while (parseInt(newNum, 10) <= parseInt(previousNumber, 10)) {
+    prepend = String(parseInt(prepend, 10) + 1);
+    newNum = prepend + currentNumber;
+  }
+
+  return parseInt(newNum, 10);
+}
+
 function utilizeSeparators(numAndSepArr) {
   let processedNums = [parseInt(numAndSepArr[0], 10)];
 
@@ -201,34 +212,35 @@ function utilizeSeparators(numAndSepArr) {
   return processedNums;
 }
 
-function findNextNumber(currentNumber, previousNumber, difference) {
-  let prepend = previousNumber.slice(0, (difference));
-  let newNum = prepend + currentNumber;
-
-  while (parseInt(newNum, 10) <= parseInt(previousNumber, 10)) {
-    prepend = String(parseInt(prepend, 10) + 1);
-    newNum = prepend + currentNumber;
-  }
-
-  return parseInt(newNum, 10);
-}
-
 function addNumberOrRange(separator, numbersArr, num, prevNum) {
   if (separator === ',') {
     numbersArr.push(num);
   } else if (num - prevNum < 5) {
-    let numberToPush = prevNum + 1;
-    while (numberToPush <= num) {
-      numbersArr.push(numberToPush);
-      numberToPush += 1
-    }
+    pushAllNumbersInRange(num, prevNum, numbersArr);
   } else if (num < 500) {
-    numbersArr.push(prevNum + 1);
-    numbersArr.push('... ' + String(num));
+    pushLongRangeLessThan500(num, prevNum, numbersArr);
   } else {
-    numbersArr.push(prevNum + 1);
-    numbersArr.push('.. ' + String(num));
+    pushLongRange500OrMore(num, prevNum, numbersArr);
   }
+}
+
+function pushAllNumbersInRange(number, previousNumber, array) {
+  let numberToPush = previousNumber + 1;
+
+  while (numberToPush <= number) {
+    array.push(numberToPush);
+    numberToPush += 1;
+  }
+}
+
+function pushLongRangeLessThan500(number, previousNumber, array) {
+  array.push(previousNumber + 1);
+  array.push('... ' + String(number));
+}
+
+function pushLongRange500OrMore(number, previousNumber, array) {
+  array.push(previousNumber + 1);
+  array.push('.. ' + String(number));
 }
 
 console.log(completeNumbers("1, 3, 7, 2, 4, 1"));   // 1, 3, 7, 12, 14, 21
