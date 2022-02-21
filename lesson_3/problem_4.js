@@ -111,18 +111,19 @@ iterate through CurrentValues
 */
 
 function completeNumbers(numString) {
-  let currentValues =  generateNumStringArray(numString);
-  let fullNumbersWithSeparators = generateFullNumbersArray(currentValues);
-  let completedNumbers = utilizeSeparators(fullNumbersWithSeparators);
-
-  return completedNumbers.map((num) => String(num)).join(', ');
+  let inputArr = parseInputString(numString);
+  let fullNumArr = generateFullNumbersArray(inputArr);
+  let numbersAndRanges = utilizeSeparators(fullNumArr);
+  let completedNumbersString = numbersAndRanges.map((num) => String(num))
+                                               .join(', ');
+  return completedNumbersString;
 }
 
-function generateNumStringArray(numString) {
-  let cleanString = numString.match(/(,|:|\-|\.\.|[0-9])/g).join('');
-  let punctuation = [',', ':', '\\-', '\\.\\.'];
+function parseInputString(numStr) {
+  let cleanString = numStr.match(/(,|:|\-|\.\.|[0-9])/g).join('');
+  let separators = [',', ':', '\\-', '\\.\\.'];
 
-  punctuation.forEach((separator) => {
+  separators.forEach((separator) => {
     let regex = new RegExp(separator, 'g');
     let replacement = separator.replace('\\', '') + ' ';
     cleanString = cleanString.replace(regex, replacement);
@@ -131,21 +132,22 @@ function generateNumStringArray(numString) {
   return cleanString.split(' ');
 }
 
-function generateFullNumbersArray(startingValues) {
-  let numbersArr = [startingValues[0]];
-  let separators = startingValues.map((numStr) => numStr.replace(/[^\D]/g, ''));
+function generateFullNumbersArray(initialValuesArr) {
+  let fullNumbersArr = [initialValuesArr[0]];
+  let separatorsArr = initialValuesArr.map((num) => num.replace(/[^\D]/g, ''));
 
-  for (let i = 1; i < startingValues.length; i += 1) {
-    let currentNum = startingValues[i];
-    let previousNum = parseInt(numbersArr[i - 1]);
+  for (let i = 1; i < initialValuesArr.length; i += 1) {
+    let currentNum = initialValuesArr[i];
+    let previousNum = parseInt(fullNumbersArr[i - 1], 10);
+    let currentSeparator = separatorsArr[i];
 
-    currentNum = convertToNumber(currentNum, previousNum);
-    currentNum = completeCurrentNum(currentNum, previousNum);
+    currentNum = handleLeadingZeros(currentNum, previousNum);
+    currentNum = generateFullNumber(currentNum, previousNum);
 
-    numbersArr.push(String(currentNum) + separators[i]);
+    fullNumbersArr.push(String(currentNum) + currentSeparator);
   }
 
-  return numbersArr;
+  return fullNumbersArr;
 }
 
 function utilizeSeparators(numAndSepArr) {
@@ -181,7 +183,7 @@ function addNumberOrRange(separator, numbersArr, num, prevNum) {
   }
 }
 
-function convertToNumber(num, prevNum) {
+function handleLeadingZeros(num, prevNum) {
   if (num[0] !== '0') {
     return parseInt(num, 10);
   } else {
@@ -212,7 +214,7 @@ function adjustDigits(num, prevNum) {
 }
 
 
-function completeCurrentNum(num, prevNum) {
+function generateFullNumber(num, prevNum) {
   if (num > prevNum) return num;
   num = adjustDigits(num, prevNum);
   return num;
