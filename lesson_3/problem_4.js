@@ -16,13 +16,14 @@ PROBLEM:
 - Take a string that consists of separator characters (,-:..) and numbers and
 convert it to a series of numbers in which every number is greater than the
 - The digits represent only the last digit(s) of the full number
-- All numbers are greater than the previous number in the string (before the
-separator)
+- All numbers are the lowest possible number that is greater than the previous
+  number in the string (before the separator) and contains the correct final
+  digit(s) that match the input string
 - If the separator is '-', ':', or '..' the numbers on either side represent an
   inclusive range, so every number beween the first and last number, including
   the first and last number should be added
-- return an array with partial numbers replaced with full numbers where needed,
-  and ranges filled in where needed
+- return an string with partial numbers replaced with full numbers where needed,
+  and ranges filled in where needed and all separated by ', '
 - when range is followed by another range, start with next number (see example
   below) and end in inclusive number
 
@@ -110,6 +111,12 @@ iterate through CurrentValues
 - return completedNumbers
 */
 
+
+/*
+Changes based on info from video:
+ the '..' vs '...' in output is typo; do not need different oned
+ do not need to validate input
+*/
 function completeNumbers(numString) {
   let inputArr = parseInputString(numString);
   let fullNumArr = generateFullNumbersArray(inputArr);
@@ -217,10 +224,8 @@ function addNumberOrRange(separator, numbersArr, num, prevNum) {
     numbersArr.push(num);
   } else if (num - prevNum < 5) {
     pushAllNumbersInRange(num, prevNum, numbersArr);
-  } else if (num < 500) {
-    pushLongRangeLessThan500(num, prevNum, numbersArr);
   } else {
-    pushLongRange500OrMore(num, prevNum, numbersArr);
+    pushLongRange(num, prevNum, numbersArr);
   }
 }
 
@@ -233,14 +238,9 @@ function pushAllNumbersInRange(number, previousNumber, array) {
   }
 }
 
-function pushLongRangeLessThan500(number, previousNumber, array) {
+function pushLongRange(number, previousNumber, array) {
   array.push(previousNumber + 1);
   array.push('... ' + String(number));
-}
-
-function pushLongRange500OrMore(number, previousNumber, array) {
-  array.push(previousNumber + 1);
-  array.push('.. ' + String(number));
 }
 
 console.log(completeNumbers("1, 3, 7, 2, 4, 1"));   // 1, 3, 7, 12, 14, 21
