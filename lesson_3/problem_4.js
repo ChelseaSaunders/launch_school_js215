@@ -248,4 +248,4 @@ console.log(completeNumbers("1-3, 1-2"));           // 1, 2, 3, 11, 12
 console.log(completeNumbers("1:5:2"));              // 1, 2, 3, 4, 5, 6, ... 12
 console.log(completeNumbers("104-2"));              // 104, 105, ... 112
 console.log(completeNumbers("104-02"));             // 104, 105, ... 202
-console.log(completeNumbers("545, 64:11"));         // 545, 564, 565, .. 611
+console.log(completeNumbers("545, 64:11"));         // 545, 564, 565, ... 611
