@@ -150,6 +150,42 @@ function generateFullNumbersArray(initialValuesArr) {
   return fullNumbersArr;
 }
 
+function handleLeadingZeros(num, prevNum) {
+  if (num[0] !== '0') {
+    return parseInt(num, 10);
+  } else {
+    return adjustDigits(num, prevNum);
+  }
+}
+
+function generateFullNumber(num, prevNum) {
+  if (num > prevNum) return num;
+  num = adjustDigits(num, prevNum);
+  return num;
+}
+
+function adjustDigits(num, prevNum) {
+  num = String(num);
+  prevNum = String(prevNum);
+
+  let differentLength = prevNum.length - num.length;
+
+  if (sameNumOfDigits(differentLength) || paddedWithZeros(differentLength)) {
+    num = '1' + num;
+    return parseInt(num, 10);
+  } else {
+    return findNextNumber(num, prevNum, differentLength);
+  }
+}
+
+function sameNumOfDigits(difference) {
+  return difference === 0;
+}
+
+function paddedWithZeros(difference) {
+  return difference < 0;
+}
+
 function utilizeSeparators(numAndSepArr) {
   let processedNums = [parseInt(numAndSepArr[0], 10)];
 
@@ -163,6 +199,18 @@ function utilizeSeparators(numAndSepArr) {
   }
 
   return processedNums;
+}
+
+function findNextNumber(currentNumber, previousNumber, difference) {
+  let prepend = previousNumber.slice(0, (difference));
+  let newNum = prepend + currentNumber;
+
+  while (parseInt(newNum, 10) <= parseInt(previousNumber, 10)) {
+    prepend = String(parseInt(prepend, 10) + 1);
+    newNum = prepend + currentNumber;
+  }
+
+  return parseInt(newNum, 10);
 }
 
 function addNumberOrRange(separator, numbersArr, num, prevNum) {
@@ -183,46 +231,9 @@ function addNumberOrRange(separator, numbersArr, num, prevNum) {
   }
 }
 
-function handleLeadingZeros(num, prevNum) {
-  if (num[0] !== '0') {
-    return parseInt(num, 10);
-  } else {
-    return adjustDigits(num, prevNum);
-  }
-}
-
-function adjustDigits(num, prevNum) {
-  num = String(num);
-  prevNum = String(prevNum);
-
-  let differentLength = prevNum.length - num.length;
-
-  if (differentLength <= 0) {
-    num = '1' + num;
-    return parseInt(num, 10);
-  }
-
-  let prepend = prevNum.slice(0, (differentLength));
-  num = prepend + num;
-
-  while (parseInt(num, 10) <= parseInt(prevNum, 10)) {
-    prepend = String(parseInt(prepend, 10) + 1);
-    num = prepend + num.slice(1);
-  }
-
-  return parseInt(num, 10);
-}
-
-
-function generateFullNumber(num, prevNum) {
-  if (num > prevNum) return num;
-  num = adjustDigits(num, prevNum);
-  return num;
-}
-
 console.log(completeNumbers("1, 3, 7, 2, 4, 1"));   // 1, 3, 7, 12, 14, 21
 console.log(completeNumbers("1-3, 1-2"));           // 1, 2, 3, 11, 12
 console.log(completeNumbers("1:5:2"));              // 1, 2, 3, 4, 5, 6, ... 12
-// console.log(completeNumbers("104-2"));              // 104, 105, ... 112
+console.log(completeNumbers("104-2"));              // 104, 105, ... 112
 console.log(completeNumbers("104-02"));             // 104, 105, ... 202
 console.log(completeNumbers("545, 64:11"));         // 545, 564, 565, .. 611
